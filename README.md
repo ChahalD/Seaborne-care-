@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
@@ -84,7 +85,7 @@
             font-weight: 500;
         }
 
-        select {
+        select, input[type="text"], input[type="tel"], input[type="email"] {
             width: 100%;
             padding: 0.85rem 1rem;
             border-radius: 8px;
@@ -94,21 +95,24 @@
             font-size: 1rem;
             outline: none;
             transition: all 0.3s ease;
+        }
+
+        select {
             cursor: pointer;
         }
 
-        select:focus {
+        select:focus, input:focus {
             border-color: #38bdf8;
             box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
         }
 
         /* Hidden Class */
         .hidden {
-            display: none;
+            display: none !important;
         }
 
-        /* Proceed Button */
-        .btn-proceed {
+        /* Buttons */
+        .btn-primary {
             width: 100%;
             padding: 0.9rem;
             border-radius: 8px;
@@ -123,28 +127,84 @@
             box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4);
         }
 
-        .btn-proceed:hover {
+        .btn-primary:hover {
             background: linear-gradient(135deg, #0369a1, #1d4ed8);
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(37, 99, 235, 0.6);
         }
 
-        .btn-proceed:disabled {
-            background: #475569;
-            cursor: not-allowed;
-            box-shadow: none;
-            transform: none;
+        /* Popup Modal Backdrop */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(8px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            animation: fadeIn 0.3s ease-in-out;
         }
 
-        /* Response Card */
-        .result-card {
-            margin-top: 2rem;
-            padding: 1.2rem;
-            border-radius: 8px;
-            background: rgba(16, 185, 129, 0.1);
-            border: 1px solid #10b981;
-            color: #34d399;
-            font-size: 0.95rem;
+        /* Modal Box */
+        .modal-content {
+            background: #1e293b;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 16px;
+            padding: 2rem;
+            width: 90%;
+            max-width: 450px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            position: relative;
+            animation: slideUp 0.3s ease-in-out;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-header h3 {
+            font-size: 1.4rem;
+            color: #ffffff;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: #94a3b8;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .close-btn:hover {
+            color: #f8fafc;
+        }
+
+        .selection-summary {
+            background: rgba(56, 189, 248, 0.1);
+            border-left: 4px solid #38bdf8;
+            padding: 0.75rem 1rem;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            color: #cbd5e1;
+            margin-bottom: 1.5rem;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
         }
     </style>
 </head>
@@ -170,7 +230,7 @@
             </select>
         </div>
 
-        <!-- Step 2: Select Country/Destination (Dynamically Populated) -->
+        <!-- Step 2: Select Country/Destination -->
         <div class="form-group hidden" id="countryGroup">
             <label for="countrySelect" id="countryLabel">Select Country / Destination</label>
             <select id="countrySelect" onchange="handleCountryChange()">
@@ -180,11 +240,40 @@
 
         <!-- Step 3: Proceed Now Button -->
         <div id="proceedContainer" class="hidden">
-            <button class="btn-proceed" onclick="proceedNext()">Proceed Now &rarr;</button>
+            <button class="btn-primary" onclick="openModal()">Proceed Now &rarr;</button>
         </div>
+    </div>
 
-        <!-- Result / Notification Section -->
-        <div id="resultCard" class="result-card hidden"></div>
+    <!-- Candidate Details Modal Popup -->
+    <div id="candidateModal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Candidate Details</h3>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+
+            <!-- Summary of selection -->
+            <div class="selection-summary" id="selectionSummary"></div>
+
+            <form id="candidateForm" onsubmit="submitAndRedirect(event)">
+                <div class="form-group">
+                    <label for="fullName">Full Name *</label>
+                    <input type="text" id="fullName" placeholder="Enter your full name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="contactNumber">Contact Number *</label>
+                    <input type="tel" id="contactNumber" placeholder="Enter 10-digit mobile number" pattern="[0-9]{10}" title="Please enter a valid 10-digit phone number" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="emailAddress">Email Address *</label>
+                    <input type="email" id="emailAddress" placeholder="Enter your email address" required>
+                </div>
+
+                <button type="submit" class="btn-primary">Continue to Payment &rarr;</button>
+            </form>
+        </div>
     </div>
 
     <script>
@@ -217,12 +306,10 @@
             const countrySelect = document.getElementById("countrySelect");
             const countryLabel = document.getElementById("countryLabel");
             const proceedContainer = document.getElementById("proceedContainer");
-            const resultCard = document.getElementById("resultCard");
 
-            // Reset Sub-options & Output
+            // Reset Sub-options
             countrySelect.innerHTML = '<option value="" disabled selected>-- Select Option --</option>';
             proceedContainer.classList.add("hidden");
-            resultCard.classList.add("hidden");
 
             if (visaType === "Schengen Visa") {
                 countryLabel.textContent = "Select Schengen Country";
@@ -254,13 +341,37 @@
             }
         }
 
-        function proceedNext() {
+        // Open Candidate Form Modal
+        function openModal() {
             const visaType = document.getElementById("visaType").value;
             const selectedCountry = document.getElementById("countrySelect").value;
-            const resultCard = document.getElementById("resultCard");
+            const summaryBox = document.getElementById("selectionSummary");
 
-            resultCard.innerHTML = `<strong>Selection Successful!</strong><br> Aapne <strong>${visaType}</strong> ke andar <strong>${selectedCountry}</strong> select kiya hai. Aage ke process par redirect ho rahe hain...`;
-            resultCard.classList.remove("hidden");
+            summaryBox.innerHTML = `Selected Visa: <strong>${visaType}</strong><br>Destination: <strong>${selectedCountry}</strong>`;
+            
+            document.getElementById("candidateModal").classList.remove("hidden");
+        }
+
+        // Close Candidate Form Modal
+        function closeModal() {
+            document.getElementById("candidateModal").classList.add("hidden");
+        }
+
+        // Handle Form Submission and Redirect to Cashfree
+        function submitAndRedirect(event) {
+            event.preventDefault(); // Default form submit stop karna
+
+            const name = document.getElementById("fullName").value;
+            const phone = document.getElementById("contactNumber").value;
+            const email = document.getElementById("emailAddress").value;
+            const visaType = document.getElementById("visaType").value;
+            const destination = document.getElementById("countrySelect").value;
+
+            // Optional: Webhook ya Backend API me candidate details save karne ka logic yahan lagaya ja sakta hai
+
+            // Redirect candidate to Cashfree payment link
+            const paymentUrl = "https://payments.cashfree.com/forms/visaprep";
+            window.location.href = paymentUrl;
         }
     </script>
 </body>
