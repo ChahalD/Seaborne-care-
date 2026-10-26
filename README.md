@@ -2,7 +2,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GlobalVisa Portal - Visa Pre-Screening & Application</title>
+    <title>GlobalVisa Portal - Official Visa Processing & Assistance</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts (Poppins) -->
@@ -20,7 +20,7 @@
             min-height: 100vh;
         }
 
-        /* Glassmorphism card effects */
+        /* Glassmorphism styling */
         .glass-card {
             background: rgba(30, 41, 59, 0.75);
             backdrop-filter: blur(16px);
@@ -166,7 +166,7 @@
 
                     <!-- Proceed Button -->
                     <div id="proceedContainer" class="hidden transition-all duration-300">
-                        <button type="button" onclick="openModal()" class="w-full bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-white font-semibold py-4 px-6 rounded-xl shadow-lg shadow-sky-500/25 transition transform active:scale-[0.98] flex items-center justify-center gap-2 group">
+                        <button type="button" onclick="openDetailsModal()" class="w-full bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-white font-semibold py-4 px-6 rounded-xl shadow-lg shadow-sky-500/25 transition transform active:scale-[0.98] flex items-center justify-center gap-2 group">
                             <span>Proceed Now</span>
                             <i class="fa-solid fa-arrow-right text-sm transition-transform group-hover:translate-x-1"></i>
                         </button>
@@ -195,40 +195,40 @@
         </div>
     </main>
 
-    <!-- Modal Popup for Candidate Details Form -->
+    <!-- MODAL 1: Candidate Details Form -->
     <div id="candidateModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md hidden transition-opacity">
         <div class="glass-card w-full max-w-lg rounded-2xl border border-slate-700/80 overflow-hidden shadow-2xl animate-modal relative max-h-[90vh] flex flex-col">
             
-            <!-- Modal Header -->
+            <!-- Modal 1 Header -->
             <div class="px-6 py-4 border-b border-slate-700/60 flex items-center justify-between bg-slate-900/80 sticky top-0 z-10">
                 <div class="flex items-center gap-2.5">
                     <div class="w-8 h-8 rounded-lg bg-sky-500/20 border border-sky-500/30 flex items-center justify-center text-sky-400">
                         <i class="fa-solid fa-user-pen text-sm"></i>
                     </div>
                     <div>
-                        <h3 class="text-base font-bold text-white">Candidate Application Details</h3>
-                        <p class="text-[11px] text-slate-400">Please provide your details as shown on your passport</p>
+                        <h3 class="text-base font-bold text-white">Candidate Details Form</h3>
+                        <p class="text-[11px] text-slate-400">Step 1 of 2: Basic Passport Information</p>
                     </div>
                 </div>
-                <button type="button" onclick="closeModal()" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white transition flex items-center justify-center">
+                <button type="button" onclick="closeDetailsModal()" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white transition flex items-center justify-center">
                     <i class="fa-solid fa-xmark text-lg"></i>
                 </button>
             </div>
 
-            <!-- Modal Content Form Body -->
+            <!-- Modal 1 Body -->
             <div class="p-6 overflow-y-auto space-y-5">
                 
                 <!-- Selection Summary Box -->
-                <div id="selectionSummary" class="bg-sky-950/40 border border-sky-500/30 rounded-xl p-3.5 text-xs text-sky-200 flex items-start gap-3">
+                <div class="bg-sky-950/40 border border-sky-500/30 rounded-xl p-3.5 text-xs text-sky-200 flex items-start gap-3">
                     <i class="fa-solid fa-circle-info text-sky-400 text-sm mt-0.5"></i>
                     <div class="space-y-0.5">
-                        <p class="font-medium text-slate-300">Selected Route:</p>
+                        <p class="font-medium text-slate-300">Selected Application Route:</p>
                         <p id="summaryText" class="text-sky-300 font-bold text-sm"></p>
                     </div>
                 </div>
 
-                <!-- Candidate Form -->
-                <form id="candidateForm" onsubmit="submitAndRedirect(event)" class="space-y-4">
+                <!-- Form -->
+                <form id="candidateForm" onsubmit="handleFormSubmission(event)" class="space-y-4">
                     
                     <!-- Full Name -->
                     <div>
@@ -290,7 +290,7 @@
                         <!-- Intended Travel Date -->
                         <div>
                             <label for="travelDate" class="block text-xs font-semibold text-slate-300 mb-1.5">
-                                Intended Travel Date <span class="text-rose-400">*</span>
+                                Target Travel Date <span class="text-rose-400">*</span>
                             </label>
                             <div class="relative">
                                 <input type="date" id="travelDate" required class="w-full bg-slate-900 border border-slate-700/80 rounded-xl px-3.5 py-2.5 text-sm text-white focus:ring-2 focus:ring-sky-500 focus:border-sky-500 outline-none transition cursor-pointer">
@@ -298,26 +298,26 @@
                         </div>
                     </div>
 
-                    <!-- Additional Travel Purpose Note -->
+                    <!-- Additional Travel Notes -->
                     <div>
                         <label for="travelPurpose" class="block text-xs font-semibold text-slate-300 mb-1.5">
                             Purpose of Travel / Additional Notes <span class="text-slate-500 font-normal">(Optional)</span>
                         </label>
-                        <textarea id="travelPurpose" rows="2" placeholder="e.g., Seaman Crew Assignment, Tourism, Business Conference..." class="w-full bg-slate-900 border border-slate-700/80 rounded-xl p-3 text-sm text-white placeholder-slate-500 focus:ring-2 focus:ring-sky-500 focus:border-sky-500 outline-none transition resize-none"></textarea>
+                        <textarea id="travelPurpose" rows="2" placeholder="e.g., Seaman Crew Assignment, Business Visit..." class="w-full bg-slate-900 border border-slate-700/80 rounded-xl p-3 text-sm text-white placeholder-slate-500 focus:ring-2 focus:ring-sky-500 focus:border-sky-500 outline-none transition resize-none"></textarea>
                     </div>
 
                     <!-- Certification Checkbox -->
                     <div class="flex items-start gap-2.5 pt-1">
                         <input type="checkbox" id="termsCheck" required class="mt-1 rounded bg-slate-900 border-slate-700 text-sky-500 focus:ring-sky-500 focus:ring-offset-slate-900">
                         <label for="termsCheck" class="text-xs text-slate-400 leading-snug">
-                            I certify that all details provided above match my official passport documents.
+                            I confirm that the provided information accurately matches my legal passport documents.
                         </label>
                     </div>
 
-                    <!-- Submit Button -->
-                    <div class="pt-3">
-                        <button type="submit" id="submitBtn" class="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white font-bold py-3.5 px-6 rounded-xl shadow-lg shadow-emerald-500/25 transition transform active:scale-[0.98] flex items-center justify-center gap-2">
-                            <span>Proceed to Payment</span>
+                    <!-- Form Submit Button -->
+                    <div class="pt-2">
+                        <button type="submit" class="w-full bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-white font-bold py-3.5 px-6 rounded-xl shadow-lg shadow-sky-500/25 transition transform active:scale-[0.98] flex items-center justify-center gap-2">
+                            <span>Submit & Review Disclaimer</span>
                             <i class="fa-solid fa-arrow-right text-xs"></i>
                         </button>
                     </div>
@@ -325,9 +325,61 @@
                 </form>
             </div>
 
-            <!-- Modal Footer -->
+            <!-- Modal 1 Footer -->
             <div class="bg-slate-900/90 px-6 py-3 border-t border-slate-800 text-center text-[11px] text-slate-400 flex items-center justify-center gap-2">
-                <i class="fa-solid fa-shield-halved text-emerald-400"></i> Direct Redirect to Official Cashfree Payment Gateway
+                <i class="fa-solid fa-lock text-sky-400"></i> Encrypted & Secure SSL Transmission
+            </div>
+
+        </div>
+    </div>
+
+    <!-- MODAL 2: Official Disclaimer & Counselor Warning Popup -->
+    <div id="disclaimerModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md hidden transition-opacity">
+        <div class="glass-card w-full max-w-md rounded-2xl border border-amber-500/30 overflow-hidden shadow-2xl animate-modal relative flex flex-col">
+            
+            <!-- Warning Header Glow -->
+            <div class="bg-amber-500/10 border-b border-amber-500/20 px-6 py-5 text-center relative">
+                <div class="w-14 h-14 rounded-full bg-amber-500/20 border border-amber-500/40 flex items-center justify-center mx-auto mb-3 text-amber-400 text-2xl shadow-lg shadow-amber-500/10">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                </div>
+                <h3 class="text-lg font-bold text-white tracking-wide">Important Visa Notice</h3>
+                <p class="text-xs text-amber-300/80 font-medium mt-0.5">Please read carefully before proceeding</p>
+            </div>
+
+            <!-- Modal 2 Content Note -->
+            <div class="p-6 text-center space-y-4">
+                
+                <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-4 text-left space-y-2">
+                    <div class="flex items-start gap-2.5 text-amber-400 font-semibold text-xs uppercase tracking-wider">
+                        <i class="fa-solid fa-shield-cat text-sm mt-0.5"></i>
+                        <span>Approval Authority Disclaimer</span>
+                    </div>
+                    <p class="text-slate-300 text-xs sm:text-sm leading-relaxed">
+                        <strong class="text-amber-300">Note:</strong> Final Visa approval is strictly subject to decision and authorization by the embassy, consulate, or official visa counselor.
+                    </p>
+                </div>
+
+                <p class="text-xs text-slate-400 leading-normal">
+                    By clicking <span class="text-slate-200 font-medium">"Continue to Payment"</span>, you acknowledge that our portal assists with pre-screening, documentation structure, and processing, while final issuance authority remains with government counselors.
+                </p>
+
+            </div>
+
+            <!-- Modal 2 Action Button -->
+            <div class="p-6 pt-0 space-y-3">
+                <button type="button" id="continuePayBtn" onclick="redirectToCashfree()" class="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white font-bold py-3.5 px-6 rounded-xl shadow-lg shadow-emerald-500/25 transition transform active:scale-[0.98] flex items-center justify-center gap-2 group">
+                    <span>Continue to Payment</span>
+                    <i class="fa-solid fa-arrow-right text-xs transition-transform group-hover:translate-x-1"></i>
+                </button>
+
+                <button type="button" onclick="closeDisclaimerModal()" class="w-full text-xs text-slate-400 hover:text-slate-200 py-1 font-medium transition">
+                    &larr; Back to Candidate Details
+                </button>
+            </div>
+
+            <!-- Modal 2 Footer -->
+            <div class="bg-slate-900/90 px-6 py-3 border-t border-slate-800 text-center text-[11px] text-slate-400 flex items-center justify-center gap-2">
+                <i class="fa-solid fa-shield-halved text-emerald-400"></i> Redirecting to Official Cashfree Gateway
             </div>
 
         </div>
@@ -335,7 +387,7 @@
 
     <!-- JavaScript Application Logic -->
     <script>
-        // 27 Schengen Countries Data
+        // 27 Schengen Countries List
         const schengenCountries = [
             "Austria", "Belgium", "Croatia", "Czech Republic", "Denmark", 
             "Estonia", "Finland", "France", "Germany", "Greece", 
@@ -345,7 +397,7 @@
             "Sweden", "Switzerland"
         ];
 
-        // C1/D US Entry Ports & Destinations Data
+        // C1/D US Maritime Entry Ports List
         const usC1DDestinations = [
             "United States - Primary Entry Port",
             "Port of Miami (Florida, USA)",
@@ -359,7 +411,7 @@
             "Hawaii Maritime Ports (USA)"
         ];
 
-        // Set minimum date selector to today's date on load
+        // Set minimum travel date selector to today
         document.addEventListener("DOMContentLoaded", () => {
             const today = new Date().toISOString().split('T')[0];
             const travelDateInput = document.getElementById("travelDate");
@@ -376,7 +428,7 @@
             const countryLabel = document.getElementById("countryLabel");
             const proceedContainer = document.getElementById("proceedContainer");
 
-            // Reset sub-options and hide proceed container
+            // Reset sub-options and hide proceed button
             countrySelect.innerHTML = '<option value="" disabled selected>-- Select Destination --</option>';
             proceedContainer.classList.add("hidden");
 
@@ -411,8 +463,8 @@
             }
         }
 
-        // Open Modal Handler
-        function openModal() {
+        // Open Modal 1 (Details Form)
+        function openDetailsModal() {
             const visaType = document.getElementById("visaType").value;
             const selectedCountry = document.getElementById("countrySelect").value;
             const summaryText = document.getElementById("summaryText");
@@ -422,22 +474,38 @@
             document.getElementById("candidateModal").classList.remove("hidden");
         }
 
-        // Close Modal Handler
-        function closeModal() {
+        // Close Modal 1
+        function closeDetailsModal() {
             document.getElementById("candidateModal").classList.add("hidden");
         }
 
-        // Form Submit & Redirect Handler
-        function submitAndRedirect(event) {
-            event.preventDefault(); // Prevent standard page refresh
+        // Handle Submission of Form 1 -> Opens Modal 2 (Disclaimer)
+        function handleFormSubmission(event) {
+            event.preventDefault(); // Prevent standard page reload
 
-            const submitBtn = document.getElementById("submitBtn");
+            // Close Candidate Form Modal
+            closeDetailsModal();
+
+            // Open Disclaimer / Counselor Warning Modal
+            document.getElementById("disclaimerModal").classList.remove("hidden");
+        }
+
+        // Close Modal 2
+        function closeDisclaimerModal() {
+            document.getElementById("disclaimerModal").classList.add("hidden");
+            // Re-open Form 1 in case candidate wants to adjust details
+            document.getElementById("candidateModal").classList.remove("hidden");
+        }
+
+        // Final Action: Continue Button Click -> Redirects to Cashfree Gateway
+        function redirectToCashfree() {
+            const continuePayBtn = document.getElementById("continuePayBtn");
             
-            // Show loading status
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin me-2"></i> Redirecting to Cashfree...`;
+            // Show loading animation
+            continuePayBtn.disabled = true;
+            continuePayBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin me-2"></i> Connecting to Cashfree...`;
 
-            // Cashfree Target URL
+            // Cashfree Form Gateway URL
             const paymentUrl = "https://payments.cashfree.com/forms/visaprep";
 
             // Redirect candidate
