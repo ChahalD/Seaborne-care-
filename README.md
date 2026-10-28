@@ -16,6 +16,7 @@
     <main>
         <div class="search-container">
             <input type="text" id="searchInput" placeholder="Search cruise name (e.g., Royal Caribbean, Titanic)...">
+            <button id="searchBtn">Search</button>
         </div>
 
         <div id="cruiseList" class="cruise-grid">
